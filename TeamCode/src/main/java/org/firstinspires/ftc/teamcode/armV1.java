@@ -13,8 +13,9 @@ public class armV1 extends LinearOpMode {
 
         arm1motor = hardwareMap.dcMotor.get("arm1motor");
         arm1motor.setDirection(DcMotor.Direction.FORWARD);
+        arm1motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm1motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm1motor.setPower(0.5);
+        arm1motor.setPower(0.1);
 
         //arm1motor.setPower(0.5);
 
@@ -26,20 +27,18 @@ public class armV1 extends LinearOpMode {
 
         telemetry.addLine("Started");
         telemetry.update();
-        sleep(3000);
 
         //get current position
         int currentPosition = arm1motor.getCurrentPosition();
 
         //determine next position
-        int wantedMovement = 1000;
+        int wantedMovement = 1140;
 
         int determinedPosition = wantedMovement + currentPosition;
 
         telemetry.addData("Current is", currentPosition);
         telemetry.addData("Desired is", determinedPosition);
         telemetry.update();
-        sleep(3000);
 
         //Move motor
         arm1motor.setTargetPosition(determinedPosition);
@@ -48,11 +47,10 @@ public class armV1 extends LinearOpMode {
             telemetry.update();
         }
         arm1motor.setPower(0);
-
+        sleep(1000);
         telemetry.addData("Position", arm1motor.getCurrentPosition());
         telemetry.addLine("Done");
         telemetry.update();
 
-        sleep(3000);
     }
 }
