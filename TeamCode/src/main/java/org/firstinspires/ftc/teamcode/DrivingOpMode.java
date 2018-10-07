@@ -17,23 +17,27 @@ public class DrivingOpMode extends OpMode {
          leftMotor = hardwareMap.dcMotor.get("leftMotor");
          leftMotor.setDirection(DcMotor.Direction.FORWARD);
          telemetry.addLine("Left Motor ready");
-         //Because the outputs of the contoller are inverse of what they should be
+         //Because the outputs of the controller are inverse of what they should be
 
          rightMotor = hardwareMap.dcMotor.get("rightMotor");
          rightMotor.setDirection(DcMotor.Direction.REVERSE);
          telemetry.addLine("Right Motor ready");
-        //Because the outputs of the contoller are inverse of what they should be
+        //Because the outputs of the controller are inverse of what they should be
         //They are different because when you flip a motor it would spin backwards to drive forwards
         telemetry.addLine("hit the button already");
     }
     @Override
     public void loop() {
-        rightMotor.setPower(gamepad1.right_stick_y);
-        leftMotor.setPower(gamepad1.left_stick_y);
+        rightMotor.setPower(getPower(gamepad1.right_stick_y));
+        leftMotor.setPower(getPower(gamepad1.left_stick_y));
 
         telemetry.clearAll();
         telemetry.addLine(("leftmotor power="+gamepad1.left_stick_y));
         telemetry.addLine(("rightmotor power="+gamepad1.right_stick_y));
 
+    }
+
+    private float getPower(float stickPosition) {
+        return Math.abs(stickPosition) * stickPosition;
     }
 }

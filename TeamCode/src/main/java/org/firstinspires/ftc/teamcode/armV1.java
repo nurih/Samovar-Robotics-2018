@@ -11,11 +11,7 @@ public class armV1 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        arm1motor = hardwareMap.dcMotor.get("arm1motor");
-        arm1motor.setDirection(DcMotor.Direction.FORWARD);
-        arm1motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm1motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm1motor.setPower(0.1);
+        initializeArmMotor();
 
         //arm1motor.setPower(0.5);
 
@@ -52,5 +48,13 @@ public class armV1 extends LinearOpMode {
         telemetry.addLine("Done");
         telemetry.update();
 
+    }
+
+    private void initializeArmMotor() {
+        arm1motor = hardwareMap.dcMotor.get("arm1motor");
+        arm1motor.setDirection(DcMotor.Direction.FORWARD);
+        arm1motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm1motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm1motor.setPower(0.1);
     }
 }
