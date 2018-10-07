@@ -36,7 +36,7 @@ public class autonamous extends LinearOpMode {
 
         int wantedMovement = 500;
         autanamous_drive(wantedMovement);
-        wantedMovement = 50;
+        wantedMovement = 300;
         int currentPositionL = leftMotor.getCurrentPosition();
         //determine next position
         int determinedPositionL = wantedMovement + currentPositionL;
@@ -47,7 +47,7 @@ public class autonamous extends LinearOpMode {
             telemetry.addData("PositionL", leftMotor.getCurrentPosition());
             telemetry.update();
         }
-        leftMotor.setPower(0);
+
         //go forward from here
         wantedMovement = 500;
         autanamous_drive(wantedMovement);
