@@ -78,8 +78,8 @@ public class Autonomous1OpMode extends LinearOpMode {
 
     private void initializeHardware() {
         arm1Motor = initializeArmMotor(ARM_MOTOR_POWER);
-        leftMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, "leftMotor", DcMotor.Direction.REVERSE);
-        rightMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, "rightMotor", DcMotor.Direction.FORWARD);
+        leftMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, RobotPart.LEFT_MOTOR, DcMotor.Direction.REVERSE);
+        rightMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, RobotPart.RIGHT_MOTOR, DcMotor.Direction.FORWARD);
     }
 
     private void lowerFromLatch() {
