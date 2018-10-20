@@ -4,11 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.teamcode.DriveByCamera;
-import org.firstinspires.ftc.teamcode.RobotPart;
 
 
 @Autonomous(name = "Drive To Images", group = "Test")
@@ -33,13 +28,12 @@ public class DriveToImageOpMode extends LinearOpMode {
 
         waitForStart();
 
-
+        driveByCamera.setTargetImage( TargetImage.BLUE_ROVER);
         //Entering Loop
         while (opModeIsActive()) {
-
             int distanceGoal = -200;
             int translationGoal = -250;
-            driveByCamera.driveToImage(TargetImage.BLUE_ROVER, distanceGoal, translationGoal);
+            driveByCamera.driveToImage( distanceGoal, translationGoal);
         }
     }
 

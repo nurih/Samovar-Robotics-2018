@@ -59,6 +59,7 @@ public class DriveByCamera {
     Telemetry telemetry;
 
     VuforiaTrackables vuforiaTrackables;
+    private VuforiaTrackable targetImage;
 
     public DriveByCamera(DcMotor rightMotor, DcMotor leftMotor, Telemetry telemetry, HardwareMap hardwareMap) {
 
@@ -136,15 +137,13 @@ public class DriveByCamera {
         return new VuforiaLocalizer.Parameters(cameraMonitorViewId);
     }
 
-    public void driveToImage(String selectedImage, int distanceGoal, int translationGoal) {
 
-        //TODO: Use the targetName to find the desired target
+    public void driveToImage(int distanceGoal, int translationGoal) {
 
-        VuforiaTrackable selectedTarget = findTrackable(selectedImage);
 
-        if (selectedTarget != null) {
+        if (targetImage != null) {
 
-            OpenGLMatrix pose = determinePose(selectedTarget);
+            OpenGLMatrix pose = determinePose(targetImage);
 
             if (pose != null) {
                 VectorF translation = pose.getTranslation();
@@ -191,10 +190,14 @@ public class DriveByCamera {
         telemetry.update();
     }
 
+    public void setTargetImage(String selectedImage) {
+        targetImage = findTrackable(selectedImage);
+    }
+
     private VuforiaTrackable findTrackable(String selectedImage) {
-        for (VuforiaTrackable t : vuforiaTrackables) {
-            if (t.getName() == selectedImage) {
-                return t;
+        for (VuforiaTrackable trackable : vuforiaTrackables) {
+            if (trackable.getName() == selectedImage) {
+                return trackable;
             }
         }
         throw new Resources.NotFoundException("Can't find traget image" + selectedImage + " in loaded targets");
