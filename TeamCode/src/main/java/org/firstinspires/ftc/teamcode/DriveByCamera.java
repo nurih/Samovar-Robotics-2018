@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -37,11 +38,11 @@ public class DriveByCamera {
     final int CAMERA_VERTICAL_DISPLACEMENT = 150;   // mm above ground
     final int CAMERA_LEFT_DISPLACEMENT = 0;   // Camera is ON the robot's center line
 
-    public static final String VISION_KEY = "AbQajKn/////AAAAGU7i3QBuOUjSp+FIwylUn4R1t6lifGcZsFjRQgSVrzy6o0q2+awGv2OiUTS+JJDAP1cPjzy8Qqaa+W0Kp1y+wDyNNJzXPKTk9zpoeA6tCnaH1N7xsfUz8DxBRZmipkzHUWSCwCkslVlvf71X4HXh3tqIJetRchP55t26A3yfgQHBZN6aMMGXR/DWLNv1zI8+t7O4dml5kmHkZLG8yLOr9G8jWUUt7A7e4eoWLxkFm7JE+DTBdIH3dSekVfcSx4tZ09/bDL4fATsN6oom4YzDeWDUaC9M4C+/7MBDLaG7dhtSs6aXhhcSfD3GF1mb1KMju4nO9xuM9ehbCTNJlyt/uHAihVmRtVu08IeVSTO+XsvS";
-
     public static final double MOTOR_FULL_POWER = .3;
     public static final double MOTOR_MEDIUM_POWER = 0;
     public static final int MOTOR_STOP = 0;
+
+    public static final String VISION_KEY = "AbQajKn/////AAAAGU7i3QBuOUjSp+FIwylUn4R1t6lifGcZsFjRQgSVrzy6o0q2+awGv2OiUTS+JJDAP1cPjzy8Qqaa+W0Kp1y+wDyNNJzXPKTk9zpoeA6tCnaH1N7xsfUz8DxBRZmipkzHUWSCwCkslVlvf71X4HXh3tqIJetRchP55t26A3yfgQHBZN6aMMGXR/DWLNv1zI8+t7O4dml5kmHkZLG8yLOr9G8jWUUt7A7e4eoWLxkFm7JE+DTBdIH3dSekVfcSx4tZ09/bDL4fATsN6oom4YzDeWDUaC9M4C+/7MBDLaG7dhtSs6aXhhcSfD3GF1mb1KMju4nO9xuM9ehbCTNJlyt/uHAihVmRtVu08IeVSTO+XsvS";
 
     private final HardwareMap hardwareMap;
 
@@ -139,7 +140,7 @@ public class DriveByCamera {
 
         //TODO: Use the targetName to find the desired target
 
-        VuforiaTrackable selectedTarget = vuforiaTrackables.get(0);
+        VuforiaTrackable selectedTarget = findTrackable(selectedImage);
 
         if (selectedTarget != null) {
 
@@ -188,6 +189,15 @@ public class DriveByCamera {
         }
 
         telemetry.update();
+    }
+
+    private VuforiaTrackable findTrackable(String selectedImage) {
+        for (VuforiaTrackable t : vuforiaTrackables) {
+            if (t.getName() == selectedImage) {
+                return t;
+            }
+        }
+        throw new Resources.NotFoundException("Can't find traget image" + selectedImage + " in loaded targets");
     }
 
     private boolean getIfDistanceGoalMet(int distanceGoal, double currentTranslation) {
