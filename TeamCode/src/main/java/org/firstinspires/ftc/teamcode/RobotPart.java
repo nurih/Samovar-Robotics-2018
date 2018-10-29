@@ -5,4 +5,5 @@ public class RobotPart {
 
     public static final String LEFT_MOTOR = "leftMotor";
     public static final String RIGHT_MOTOR = "rightMotor";
+    public static final String COLLECTOR_ARM_MOTOR = "collectorArmMotor";
 }
