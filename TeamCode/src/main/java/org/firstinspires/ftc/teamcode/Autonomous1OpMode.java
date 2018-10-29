@@ -15,7 +15,7 @@ public class Autonomous1OpMode extends LinearOpMode {
     private static final int TURN_ANGLE_90_DEGREES = 90;
     private static final int TURN_ANGLE_45_DEGREES = 45;
     private static final double DRIVE_TO_WALL = 48;
-    private static final double DRIVE_FROM_LATCH = 3;
+    private static final double DRIVE_FROM_LATCH = 5;
 
     double WANTED_MOVEMENT_L = 3;
 
@@ -26,8 +26,10 @@ public class Autonomous1OpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        waitforstart();
         initializeHardware();
+
+        waitforstart();
+
 
         telemetry.addLine("Started");
         telemetry.update();
@@ -36,24 +38,22 @@ public class Autonomous1OpMode extends LinearOpMode {
         sleep(1000);
 
         goStraight(DRIVE_FROM_LATCH);
+        waitForDriveDone();
         sleep(1000);
 
         turn(TurnDirection.RIGHT,TURN_ANGLE_45_DEGREES);
-
+        waitForDriveDone();
         sleep(1000);
 
         goStraight(DRIVE_TO_WALL);
-
         waitForDriveDone();
         sleep(1000);
 
         turn(TurnDirection.RIGHT, -TURN_ANGLE_90_DEGREES);
-
         waitForDriveDone();
         sleep(1000);
 
         goStraight(DRIVE_TO_WALL);
-
         waitForDriveDone();
         sleep(1000);
 
@@ -115,7 +115,7 @@ public class Autonomous1OpMode extends LinearOpMode {
         arm1Motor.setDirection(DcMotor.Direction.REVERSE);
         arm1Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm1Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sleep(500);
+        sleep(750);
         arm1Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm1Motor.setPower(power);
         return arm1Motor;
@@ -161,4 +161,5 @@ public class Autonomous1OpMode extends LinearOpMode {
 
         telemetry.update();
     }
+
 }
