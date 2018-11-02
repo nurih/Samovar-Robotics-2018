@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "Driving OpMode")
 public class DrivingOpMode extends OpMode {
     public static final double LATCH_ARM_POWER = 0.5;
+    public static final double COLLECTOR_ARM_POWER = 0.25;
     DcMotor leftMotor = null;
     DcMotor rightMotor = null;
     DcMotor arm1Motor = null;
@@ -54,10 +55,10 @@ public class DrivingOpMode extends OpMode {
     }
 
     private void operateLatchArm() {
-        if (gamepad1.x) {
+        if (gamepad2.right_bumper) {
             arm1Motor.setPower(-LATCH_ARM_POWER);
 
-        } else if (gamepad1.y) {
+        } else if (gamepad2.left_bumper) {
             arm1Motor.setPower(LATCH_ARM_POWER);
 
         } else {
@@ -67,7 +68,7 @@ public class DrivingOpMode extends OpMode {
     }
 
     private void operateCollectorArm() {
-        collectorArm.setPower(gamepad2.right_stick_y / 3.0);
+        collectorArm.setPower(DrivePowerCurve.valueSquared(-gamepad2.right_stick_y) * COLLECTOR_ARM_POWER);
     }
 
 }
