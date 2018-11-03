@@ -13,6 +13,7 @@ public class DrivingOpMode extends OpMode {
     DcMotor arm1Motor = null;
 
     DcMotor collectorArm = null;
+    private float drivingPowerFactor = (float) .5;
 
     @Override
     public void init() {
@@ -43,15 +44,38 @@ public class DrivingOpMode extends OpMode {
 
     @Override
     public void loop() {
-        rightMotor.setPower(DrivePowerCurve.valueSquared(gamepad1.right_stick_y));
-        leftMotor.setPower(DrivePowerCurve.valueSquared(gamepad1.left_stick_y));
+        rightMotor.setPower(getDrivePower(gamepad1.right_stick_y));
+        leftMotor.setPower(getDrivePower(gamepad1.left_stick_y));
 
         telemetry.addLine(("leftmotor power=" + gamepad1.left_stick_y));
         telemetry.addLine(("rightmotor power=" + gamepad1.right_stick_y));
 
+        changePower();
+
         operateLatchArm();
 
         operateCollectorArm();
+    }
+
+    private void changePower() {
+        if(gamepad1.x) {
+        drivingPowerFactor = 0.75f;
+        telemetry.addLine("FASTEST");
+    } else if(gamepad1.y) {
+        drivingPowerFactor = 0.5f;
+        telemetry.addLine("FAST");
+    } else if(gamepad1.b) {
+        drivingPowerFactor = 0.25f;
+        telemetry.addLine("SLOW");
+    } else if(gamepad1.a) {
+        drivingPowerFactor = 0.1f;
+        telemetry.addLine("SLOWEST");
+    }
+    }
+
+    private float getDrivePower(float stickPosition) {
+        // tame total power so it's slower
+        return DrivePowerCurve.linear(stickPosition * drivingPowerFactor);
     }
 
     private void operateLatchArm() {
@@ -68,7 +92,9 @@ public class DrivingOpMode extends OpMode {
     }
 
     private void operateCollectorArm() {
-        collectorArm.setPower(DrivePowerCurve.valueSquared(-gamepad2.right_stick_y) * COLLECTOR_ARM_POWER);
+        collectorArm.setPower(DrivePowerCurve.valueSquared(gamepad2.right_stick_y) * COLLECTOR_ARM_POWER);
     }
+
+
 
 }
