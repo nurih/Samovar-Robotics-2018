@@ -9,4 +9,10 @@ public class DrivePowerCurve {
     public static float valueSquared(float stickPosition) {
         return Math.abs(stickPosition) * stickPosition;
     }
+
+    public static float linear(float stickPosition){
+        return stickPosition;
+    }
+
+    public enum MODE {LINEAR, SQUARED,POLYNOMIAL}
 }
