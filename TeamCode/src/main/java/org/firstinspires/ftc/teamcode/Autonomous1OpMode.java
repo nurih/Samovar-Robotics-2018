@@ -126,7 +126,7 @@ public class Autonomous1OpMode extends LinearOpMode {
         DcMotor motor = hardwareMap.dcMotor.get(motorName);
         motor.setDirection(direction);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         motor.setPower(driveMotorPower);
         telemetry.addLine(motorName + " motor ready");
         return motor;
