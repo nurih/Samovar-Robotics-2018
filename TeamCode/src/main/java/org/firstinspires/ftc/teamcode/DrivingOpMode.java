@@ -15,6 +15,9 @@ public class DrivingOpMode extends OpMode {
     DcMotor collectorArm = null;
     private float drivingPowerFactor = (float) .5;
 
+
+    CollectorExtenderServo collectorExtenderServo;
+
     @Override
     public void init() {
         leftMotor = hardwareMap.dcMotor.get(RobotPart.LEFT_MOTOR);
@@ -40,6 +43,8 @@ public class DrivingOpMode extends OpMode {
         collectorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         collectorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addLine("hit the button already");
+
+        collectorExtenderServo = new CollectorExtenderServo(hardwareMap,telemetry);
     }
 
     @Override
@@ -50,11 +55,14 @@ public class DrivingOpMode extends OpMode {
         telemetry.addLine(("leftmotor power=" + gamepad1.left_stick_y));
         telemetry.addLine(("rightmotor power=" + gamepad1.right_stick_y));
 
+
         changePower();
 
         operateLatchArm();
 
-        operateCollectorArm();
+        catchMinerals();
+
+        extendCollectorArm();
     }
 
     private void changePower() {
@@ -91,7 +99,15 @@ public class DrivingOpMode extends OpMode {
         telemetry.addData("current position", arm1Motor.getCurrentPosition());
     }
 
-    private void operateCollectorArm() {
+    private void extendCollectorArm(){
+        if(gamepad2.left_stick_y != 0){
+            collectorExtenderServo.rotate(gamepad2.left_stick_y);
+        }
+        else {
+            collectorExtenderServo.stop();
+        }
+    }
+    private void catchMinerals() {
         collectorArm.setPower(DrivePowerCurve.valueSquared(gamepad2.right_stick_y) * COLLECTOR_ARM_POWER);
     }
 
