@@ -52,6 +52,8 @@ public class armV1 extends LinearOpMode {
 
     private void initializeArmMotor() {
         arm1motor = hardwareMap.dcMotor.get("arm1motor");
+        arm1motor.setPower(0);
+        arm1motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm1motor.setDirection(DcMotor.Direction.FORWARD);
         // pull up
         arm1motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
