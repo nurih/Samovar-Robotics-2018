@@ -1,90 +1,60 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import java.util.Locale;
-
-@Autonomous(name = "Autonamous 2")
+@Autonomous(name = "Autonamous 3 (Ben)")
 public class Autonomous2OpMode extends LinearOpMode {
     private static final double DRIVE_MOTOR_POWER = 1;
 
-
     DcMotor leftMotor = null;
     DcMotor rightMotor = null;
+    DcMotor arm1Motor = null;
 
 
-    BNO055IMU imu;
-    Orientation angles;
-    Acceleration gravity;
+    private static final double ARM_MOTOR_POWER = 1;
+    public static final int DETACH_FROM_LANDER_TICKS = 8700;
+
+    IMU imu;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         initializeHardware();
 
-        telemetry.addLine("hardware initialized");
-        telemetry.update();
         waitForStart();
 
-        while (opModeIsActive()) {
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-            double angleInDegrees = getDegrees(angles.firstAngle);
-            telemetry.addData("AngleInDegrees: ",angleInDegrees);
-            if (angleInDegrees < -1) {
-                rightMotor.setPower(.2);
-                leftMotor.setPower(-.2);
-            }
-            else if (angleInDegrees > 1) {
-                rightMotor.setPower(-.2);
-                leftMotor.setPower(.2);
-            }
-            else{
-                rightMotor.setPower(0);
-                leftMotor.setPower(0);
-            }
-            sendTelementary();
-        }
-    }
-
-    double getDegrees(double angle) {
-        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angle);
-    }
-
-    private void sendTelementary() {
-        telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle));
+        telemetry.addLine("Started");
         telemetry.update();
+
+        turn(90);
+        //waitForDriveDone();
+        telemetry.addLine("turned!!!!!!!!!!");
+        sleep(200);
+
+        goStraight(10);
+        waitForDriveDone();
     }
 
-    private void initializeHardware() {
+    private void turn(int TurnAmount) {
+        boolean turned = false;
 
-        leftMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, RobotPart.LEFT_MOTOR, DcMotor.Direction.REVERSE);
-        rightMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, RobotPart.RIGHT_MOTOR, DcMotor.Direction.FORWARD);
-        imu = initializeIMU();
-    }
+        double angleInDegrees = imu.getDegrees();
 
-    private BNO055IMU initializeIMU() {
-        imu = hardwareMap.get(BNO055IMU.class, RobotPart.IMU);
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imu.initialize(parameters);
-        return imu;
+        while (angleInDegrees < TurnAmount) {
+            angleInDegrees = imu.getDegrees();
+            rightMotor.setPower(.4);
+            leftMotor.setPower(-.4);
+            telemetry.addLine("U NEVER LEFT THE MATRIX BROOO, THERE IS NO ESCAPE");
+            telemetry.update();
+        }
+        telemetry.addLine("WOAH TRIPPY MAN YOU JUST DID A 4D DRIFT");
+        telemetry.update();
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
     }
 
 
@@ -93,17 +63,71 @@ public class Autonomous2OpMode extends LinearOpMode {
         motor.setDirection(direction);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setPower(0);
+        //motor.setPower(driveMotorPower);
         telemetry.addLine(motorName + " motor ready");
         return motor;
     }
 
-    String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+
+    private DcMotor initializeArmMotor(double power) {
+        DcMotor arm1Motor = hardwareMap.dcMotor.get(RobotPart.ARM_1_MOTOR);
+        arm1Motor.setDirection(DcMotor.Direction.REVERSE);
+        arm1Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm1Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sleep(750);
+        arm1Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm1Motor.setPower(power);
+        return arm1Motor;
     }
 
-    String formatDegrees(double degrees) {
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    private void initializeHardware() {
+
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = new IMU(hardwareMap, telemetry);
+
+        arm1Motor = initializeArmMotor(ARM_MOTOR_POWER);
+        leftMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, RobotPart.LEFT_MOTOR, DcMotor.Direction.REVERSE);
+        rightMotor = initializeDriveMotor(DRIVE_MOTOR_POWER, RobotPart.RIGHT_MOTOR, DcMotor.Direction.FORWARD);
+    }
+
+    private void waitForDriveDone() {
+        while (leftMotor.isBusy() || rightMotor.isBusy()) {
+            // spin wait.
+        }
+    }
+
+    private void goStraight(double distanceInches) {
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftMotor.setPower(.5);
+        rightMotor.setPower(.5);
+        int distanceTicks = inchToTicks(distanceInches);
+
+        int currentPositionLeft = leftMotor.getCurrentPosition();
+        int currentPositionRight = rightMotor.getCurrentPosition();
+        telemetry.addData("PositionL", currentPositionLeft);
+        telemetry.addData("PositionR", currentPositionRight);
+
+
+        leftMotor.setTargetPosition(distanceTicks + currentPositionLeft);
+        rightMotor.setTargetPosition(distanceTicks + currentPositionRight);
+
+        telemetry.addData("PositionL", leftMotor.getCurrentPosition());
+        telemetry.addData("PositionR", rightMotor.getCurrentPosition());
+
+        telemetry.update();
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    private static int inchToTicks(double inches) {
+        return (int) (inches * (26.1));
+
     }
 
 }
