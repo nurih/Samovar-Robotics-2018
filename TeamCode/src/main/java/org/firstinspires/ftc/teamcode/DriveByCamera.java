@@ -25,6 +25,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
+
 enum BotDirection {
     LEFT,
     RIGHT,
@@ -32,8 +33,16 @@ enum BotDirection {
 
 }
 
+
 public class DriveByCamera {
-    // camera location on the robot
+    public interface TargetImage {
+        public static final String BLUE_ROVER = "BluePerimeter";
+        public static final String RED_FOOTPRINT = "RedPerimeter";
+        public static final String FRONT_CRATERS = "FrontPerimeter";
+        public static final String BACK_SPACE = "BackPerimeter";
+
+    }    // camera location on the robot
+
     final int CAMERA_FORWARD_DISPLACEMENT = 177;   // mm in front of robot center
     final int CAMERA_VERTICAL_DISPLACEMENT = 150;   // mm above ground
     final int CAMERA_LEFT_DISPLACEMENT = 0;   // Camera is ON the robot's center line
