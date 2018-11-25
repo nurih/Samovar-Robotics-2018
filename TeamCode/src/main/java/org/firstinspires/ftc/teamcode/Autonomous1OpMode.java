@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name = "Autonomous V1")
-public class Autonomous1OpMode extends LinearOpMode {
-
+public class Autonomous1OpMode extends Teapot {
 
     //inches
     private static final double DRIVE_MOTOR_POWER = 1;
@@ -51,17 +49,6 @@ public class Autonomous1OpMode extends LinearOpMode {
 
     }
 
-    private void waitForDriveDone() {
-        while (leftMotor.isBusy() || rightMotor.isBusy()) {
-            telemetry.addData("PositionL ", leftMotor.getCurrentPosition());
-            telemetry.addData("PositionR ", rightMotor.getCurrentPosition());
-            telemetry.update();
-            if (isStopRequested()) {
-                break;
-            }
-        }
-
-    }
 
     private void turn(TurnDirection turnDirection, int turnAngleDegrees) {
         DcMotor motor;
@@ -70,9 +57,9 @@ public class Autonomous1OpMode extends LinearOpMode {
 
         int currentPositionLeft = motor.getCurrentPosition();
 
-        motor.setTargetPosition(currentPositionLeft + degreesToTicks(turnAngleDegrees));
+        motor.setTargetPosition(currentPositionLeft + Teapot.degreesToTicks(turnAngleDegrees));
 
-        waitForDriveDone();
+        waitForDriveDone(leftMotor, rightMotor);
     }
 
     private void initializeHardware() {
@@ -127,33 +114,14 @@ public class Autonomous1OpMode extends LinearOpMode {
         return motor;
     }
 
-    private static int inchToTicks(double inches) {
-        return (int) (inches * (1120 / 46));
-
-    }
-
-    private static int degreesToTicks(double degrees) {
-        double circumference = 2 * Math.PI * 13.5;
-        double arcLength = (circumference / 360) * degrees;
-        return inchToTicks(arcLength);
-    }
 
     private void goStraight(double distanceInches) {
+        int distanceTicks = Teapot.inchToTicks(distanceInches);
 
-        int distanceTicks = inchToTicks(distanceInches);
+        leftMotor.setTargetPosition(distanceTicks + leftMotor.getCurrentPosition());
+        rightMotor.setTargetPosition(distanceTicks + rightMotor.getCurrentPosition());
 
-        int currentPositionLeft = leftMotor.getCurrentPosition();
-        int currentPositionRight = rightMotor.getCurrentPosition();
-        telemetry.addData("PositionL", currentPositionLeft);
-        telemetry.addData("PositionR", currentPositionRight);
-
-        telemetry.update();
-
-        leftMotor.setTargetPosition(distanceTicks + currentPositionLeft);
-        rightMotor.setTargetPosition(distanceTicks + currentPositionRight);
-
-        waitForDriveDone();
-
+        waitForDriveDone(leftMotor, rightMotor);
     }
 
 }

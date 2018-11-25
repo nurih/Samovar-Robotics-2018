@@ -21,7 +21,7 @@ public class TestImuWithEncodersOpMode extends Teapot {
         imuDrive.straight(-6);
 
         sleep(2000);
-        double currentAngle = imuDrive.trun(45);
+        double currentAngle = imuDrive.turn(45);
         telemetry.addData("Current angle is ", currentAngle);
 
         sleep(2000);

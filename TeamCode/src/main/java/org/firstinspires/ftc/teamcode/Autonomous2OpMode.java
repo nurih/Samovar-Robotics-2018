@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Autonamous 3 (Ben)")
+@Autonomous(name = "Autonomous 2 (Ben)")
 public class Autonomous2OpMode extends LinearOpMode {
     private static final double DRIVE_MOTOR_POWER = 1;
 

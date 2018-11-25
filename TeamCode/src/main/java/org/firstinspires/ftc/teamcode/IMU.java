@@ -40,7 +40,7 @@ public class IMU {
     public double getDegrees(){
         Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double angleInDegrees = AngleUnit.DEGREES.fromUnit(orientation.angleUnit, orientation.firstAngle);
-        telemetry.addData("Heading", toString(angleInDegrees));
+        telemetry.addData("Heading (degrees)", toString(angleInDegrees));
         return angleInDegrees;
     }
 
