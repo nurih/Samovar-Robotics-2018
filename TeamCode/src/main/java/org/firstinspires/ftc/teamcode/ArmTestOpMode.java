@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.RobotPart;
 
-@TeleOp(name = "Arm Test - show ticks")
+@TeleOp(name = "Arm Test - show ticks", group = "Test")
 public class ArmTestOpMode extends OpMode {
     DcMotor arm1Motor = null;
 

@@ -42,7 +42,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@TeleOp(name = "Detect Silver Mineral", group = "Concept")
+@TeleOp(name = "Detect Silver Mineral", group = "Test")
 public class TensorFlowDetectSilverMineralOpMode extends OpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";

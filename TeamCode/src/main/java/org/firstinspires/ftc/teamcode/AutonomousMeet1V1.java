@@ -11,7 +11,6 @@ public class AutonomousMeet1V1 extends Teapot {
     DcMotor arm1Motor = null;
     ImuDrive imuDrive;
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         arm1Motor =initializeArmMotor(1);
