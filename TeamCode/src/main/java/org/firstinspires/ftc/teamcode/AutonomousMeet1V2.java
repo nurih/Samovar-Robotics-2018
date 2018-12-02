@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static org.firstinspires.ftc.teamcode.Autonomous2OpMode.DETACH_FROM_LANDER_TICKS;
 
-@Autonomous(name = "Autonomous Meet1 V1")
-public class AutonomousMeet1V1 extends Teapot {
+@Autonomous(name = "Autonomous Meet1 V2")
+public class AutonomousMeet1V2 extends Teapot {
 
     DcMotor arm1Motor = null;
     ImuDrive imuDrive;
@@ -23,30 +23,19 @@ public class AutonomousMeet1V1 extends Teapot {
         lowerFromLatch();
 
         pause();
-        imuDrive.straight(-2);
+        imuDrive.straight(-6);
 
         pause();
         double currentAngle = imuDrive.turn(-45);
         telemetry.addData("Current angle is ", currentAngle);
         telemetry.update();
-
-        pause();
-        imuDrive.straight(52);
-        waitForDriveDone(imuDrive.leftMotor, imuDrive.rightMotor);
-        pause();
-
-        imuDrive.turn(45);
-        pause();
-
-        imuDrive.straight(70);
-        waitForDriveDone(imuDrive.leftMotor, imuDrive.rightMotor);
-
+        
         telemetry.addLine("Done");
         telemetry.update();
     }
 
     private void pause() {
-        sleep(10);
+        sleep(1000);
     }
 
     private void lowerFromLatch() {
