@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -43,7 +42,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@TeleOp(name = "Detect Silver Mineral", group = "Test")
+@TeleOp(name = "Detect Gold Mineral", group = "Test")
 public class TensorFlowDetectSilverMineralOpMode extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -125,15 +124,18 @@ public class TensorFlowDetectSilverMineralOpMode extends LinearOpMode {
             // the last time that call was made.
             List<Recognition> itemsSeen = tensorFlowObjectDetector.getUpdatedRecognitions();
             if (itemsSeen == null) {
-                return;
+                continue;
             }
 
             telemetry.addData("Number of things seen: ", itemsSeen.size());
 
             for (Recognition item : itemsSeen) {
-                reportItem(item);
+                if (item.getLabel() == LABEL_GOLD_MINERAL) {
+                    reportItem(item);
+                    telemetry.update();
+                }
             }
-            telemetry.update();
+
         }
     }
 

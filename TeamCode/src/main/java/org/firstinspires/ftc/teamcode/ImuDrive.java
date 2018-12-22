@@ -46,21 +46,21 @@ public class ImuDrive {
         return motor;
     }
 
-    public double turn(int targetAngle) {
+    public double turn(int targetAngleUniversal) {
         double measuredAngle = 0;
 
-        while (this.opMode.opModeIsActive() && !angleIsReached(targetAngle)) {
-            telemetry.addData("Target is", targetAngle);
+        while (this.opMode.opModeIsActive() && !angleIsReached(targetAngleUniversal)) {
+            telemetry.addData("Target is", targetAngleUniversal);
 
-            measuredAngle = imu.getDegrees();
+            measuredAngle = getDegrees();
 
             telemetry.addData("Right Motor", rightMotor.getCurrentPosition());
             telemetry.addData("Left Motor", leftMotor.getCurrentPosition());
 
-            if (measuredAngle < targetAngle - 1) {
+            if (measuredAngle < targetAngleUniversal - 1) {
                 rightMotor.setTargetPosition(rightMotor.getCurrentPosition() + TICKS_DELTA);
                 leftMotor.setTargetPosition(leftMotor.getCurrentPosition() - TICKS_DELTA);
-            } else if (measuredAngle > targetAngle + 1) {
+            } else if (measuredAngle > targetAngleUniversal + 1) {
                 rightMotor.setTargetPosition(rightMotor.getCurrentPosition() - TICKS_DELTA);
                 leftMotor.setTargetPosition(leftMotor.getCurrentPosition() + TICKS_DELTA);
             } else {
@@ -69,6 +69,10 @@ public class ImuDrive {
             telemetry.update();
         }
         return measuredAngle;
+    }
+
+    public double getDegrees() {
+        return imu.getDegrees();
     }
 
     public void straight(double distanceInches) {
@@ -86,7 +90,7 @@ public class ImuDrive {
     }
 
     public boolean angleIsReached(double targetAngle) {
-        double measuredAngle = imu.getDegrees();
+        double measuredAngle = getDegrees();
         return angleIsReached(targetAngle, measuredAngle);
     }
 
