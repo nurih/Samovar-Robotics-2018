@@ -23,12 +23,11 @@ public class AutonomousMeet3v1 extends Teapot {
         waitForStart();
 
         lowerFromLatch();
+        pause();
+        imuDrive.straight(4);
 
         pause();
-        imuDrive.straight(-6);
-
-        pause();
-        double currentAngle = imuDrive.turn(-45);
+        double currentAngle = imuDrive.turn(90);
         telemetry.addData("Current angle is ", currentAngle);
         telemetry.update();
         pause();
