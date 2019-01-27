@@ -76,4 +76,20 @@ public class SamoVision {
 
         return this.seenItem != null;
     }
+    public boolean trySeeGoldThingyForTest() {
+        this.seenItem = null;
+        List<Recognition> itemsSeen = tensorFlowObjectDetector.getUpdatedRecognitions();
+        if (itemsSeen == null) {
+            return false;
+        }
+
+        for (Recognition item : itemsSeen) {
+            if (item.getLabel() == LABEL_GOLD_MINERAL) {
+                this.seenItem = item;
+                return true;
+
+            }return false;
+        }
+        return false;
+    }
 }

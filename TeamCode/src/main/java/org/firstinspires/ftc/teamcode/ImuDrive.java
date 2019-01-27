@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class ImuDrive {
     public static final double DEGREES_TOLERANCE = 5;
     public static final double DRIVE_MOTOR_POWER = 1;
-    public static final int TICKS_DELTA = 8;
+    public static final int TICKS_DELTA = 10;
     private final HardwareMap hardwareMap;
 
     final Telemetry telemetry;
