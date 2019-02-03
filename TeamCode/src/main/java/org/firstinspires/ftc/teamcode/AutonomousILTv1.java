@@ -31,7 +31,7 @@ public class AutonomousILTv1 extends Teapot {
 
         // retract latch arm
         pullArmBack();
-        pause();
+
 
         // back forward so not bumping against lander leg
         imuDrive.straight(-AWAY_FROM_HOOK);
@@ -53,7 +53,7 @@ public class AutonomousILTv1 extends Teapot {
         //loop where we turn, and check if we are seeing gold thingy\
         double startingAngle = imuDrive.getDegrees();
         Say("Starting angle", startingAngle);
-        for (int attempt = 1; attempt <= 5; attempt++) {
+        for (int attempt = 1; attempt <= 6; attempt++) {
             if (samoVision.trySeeGoldThing()) {
                 Say("It's right there!!! attempt");
                 break;
@@ -67,23 +67,37 @@ public class AutonomousILTv1 extends Teapot {
 
         Say("Here we go?");
         knockOffGoldThingy();
+        Say("HOLY CRAP WE PULLED A QUANTUM SHIFT AND JUMPED THE LOOP");
+        pause();
+        imuDrive.straight(-6);
+        Say("BUSH DID 911");
+        Say("have a nice day");
 
-        imuDrive.straight(6);
+
     }
 
     private void knockOffGoldThingy() {
+        int attempts = 0;
         while (!this.isStopRequested()) {
             // vision - try to see object.
             if (samoVision.trySeeGoldThing()) {
+
                 double angle = samoVision.getEstimatedAngle();
                 if (Math.abs(angle) > 2) {
                     imuDrive.turn((int) (imuDrive.getDegrees() + angle));
                 }
 
                 imuDrive.straight(-10);
+                imuDrive.waitForMotorsToReach();
                 telemetry.addLine("Inched forward");
+                attempts++;
             } else {
-                telemetry.addLine("Not seeing it...");
+
+
+                if (attempts >= 5) {
+
+                    break;
+                }
             }
             telemetry.update();
         }

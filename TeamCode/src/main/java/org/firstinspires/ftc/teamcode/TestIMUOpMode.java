@@ -66,6 +66,9 @@ public class TestIMUOpMode extends LinearOpMode {
 
     private void sendTelementary() {
         telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle));
+        telemetry.addData("test3rd",formatAngle(angles.angleUnit,angles.thirdAngle));
+        telemetry.addData("test2rd",formatAngle(angles.angleUnit,angles.secondAngle));
+
         telemetry.update();
     }
 
