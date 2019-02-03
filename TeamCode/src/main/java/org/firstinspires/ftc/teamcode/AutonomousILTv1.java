@@ -18,44 +18,57 @@ public class AutonomousILTv1 extends Teapot {
         imuDrive = new ImuDrive(this);
 
         samoVision = new SamoVision(hardwareMap);
-        telemetry.addLine("Hardware initialized");
-        telemetry.update();
+        Say("Hardware initialized");
         waitForStart();
 
+        // off the wall
         lowerFromLatch();
-        pause();
-        imuDrive.straight(2 );
 
+        double AWAY_FROM_HOOK = 3;
+        // away from hook to detach
+        imuDrive.straight(AWAY_FROM_HOOK);
         pause();
-        backinit();
-        //base turn
-        // 45
-        //loop where we turn, and check if we are seeing gold thingy\
+
+        // retract latch arm
+        pullArmBack();
+        pause();
+
+        // back forward so not bumping against lander leg
+        imuDrive.straight(-AWAY_FROM_HOOK);
+        pause();
+
+        // facing out of lander
         imuDrive.turn(60);
+        Say("Turned out to field");
         pause();
-        for(int x = 60; x <= 121; x+=20 ){
-            telemetry.addLine("The x =");
-            telemetry.addData("X:",x);
-            if(!samoVision.trySeeGoldThingyForTest()){
-                telemetry.addLine("not seeing it");
-                imuDrive.straight(-2);
-                imuDrive.turn(x);
-                pause();
-            }else{
-                telemetry.addLine("seeing it");
 
+        // into field to get closer to minerals
+        imuDrive.straight(-6);
+        Say("Drove away from lander");
+        pause();
+
+        // try out luck to get it the first time
+        samoVision.trySeeGoldThing();
+
+        //loop where we turn, and check if we are seeing gold thingy\
+        double startingAngle = imuDrive.getDegrees();
+        Say("Starting angle", startingAngle);
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            if (samoVision.trySeeGoldThing()) {
+                Say("It's right there!!! attempt");
                 break;
+            } else {
+                int targetAngle = (int) startingAngle + 12 * attempt;
+                Say("Not seeing it. Turning to", targetAngle);
+                imuDrive.turn(targetAngle);
+                pause();
             }
-            telemetry.addLine("here we go?");
-
         }
-        telemetry.update();
-        pause();
+
+        Say("Here we go?");
         knockOffGoldThingy();
-        pause();
-        imuDrive.straight(5);
-        telemetry.addLine("Done");
-        telemetry.update();
+
+        imuDrive.straight(6);
     }
 
     private void knockOffGoldThingy() {
@@ -79,13 +92,13 @@ public class AutonomousILTv1 extends Teapot {
     }
 
     private void pause() {
-        sleep(1000);
+        sleep(500);
     }
 
-    private void backinit(){
+    private void pullArmBack() {
         int currentPosition = arm1Motor.getCurrentPosition();
-
         int determinedPosition = currentPosition - (DETACH_FROM_LANDER_TICKS);
+
         telemetry.addData("Current is", currentPosition);
         telemetry.addData("Desired is", determinedPosition);
         telemetry.update();
@@ -93,6 +106,7 @@ public class AutonomousILTv1 extends Teapot {
         arm1Motor.setTargetPosition(determinedPosition);
 
     }
+
     private void lowerFromLatch() {
         int currentPosition = arm1Motor.getCurrentPosition();
 

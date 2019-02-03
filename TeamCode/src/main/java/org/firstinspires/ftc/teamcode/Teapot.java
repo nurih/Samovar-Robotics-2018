@@ -28,6 +28,16 @@ public class Teapot extends LinearOpMode {
 
     }
 
+    public void Say(String prompt, Object value){
+        telemetry.addData(prompt,value);
+        telemetry.update();
+    }
+
+    public void Say(String something){
+        telemetry.addLine(something);
+        telemetry.update();
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
 

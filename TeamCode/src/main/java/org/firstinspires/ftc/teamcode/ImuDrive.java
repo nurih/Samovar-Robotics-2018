@@ -50,23 +50,17 @@ public class ImuDrive {
         double measuredAngle = 0;
 
         while (this.opMode.opModeIsActive() && !angleIsReached(targetAngleUniversal)) {
-            telemetry.addData("Target is", targetAngleUniversal);
-
             measuredAngle = getDegrees();
 
-            telemetry.addData("Right Motor", rightMotor.getCurrentPosition());
-            telemetry.addData("Left Motor", leftMotor.getCurrentPosition());
-
-            if (measuredAngle < targetAngleUniversal - 1) {
+            if (measuredAngle < targetAngleUniversal - DEGREES_TOLERANCE) {
                 rightMotor.setTargetPosition(rightMotor.getCurrentPosition() + TICKS_DELTA);
                 leftMotor.setTargetPosition(leftMotor.getCurrentPosition() - TICKS_DELTA);
-            } else if (measuredAngle > targetAngleUniversal + 1) {
+            } else if (measuredAngle > targetAngleUniversal + DEGREES_TOLERANCE) {
                 rightMotor.setTargetPosition(rightMotor.getCurrentPosition() - TICKS_DELTA);
                 leftMotor.setTargetPosition(leftMotor.getCurrentPosition() + TICKS_DELTA);
             } else {
                 // do nothing. When drive-to-position, it should stay in place
             }
-            telemetry.update();
         }
         return measuredAngle;
     }
@@ -81,8 +75,6 @@ public class ImuDrive {
 
         int currentPositionLeft = leftMotor.getCurrentPosition();
         int currentPositionRight = rightMotor.getCurrentPosition();
-
-        telemetry.update();
 
         leftMotor.setTargetPosition(distanceTicks + currentPositionLeft);
         rightMotor.setTargetPosition(distanceTicks + currentPositionRight);
