@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static org.firstinspires.ftc.teamcode.Autonomous2OpMode.DETACH_FROM_LANDER_TICKS;
 
-@Autonomous(name = "Autonomous ILT Crater")
-public class AutonomousILTv1 extends Teapot {
+@Autonomous(name = "Autonomous ILT Depot")
+public class AutonomousILT2 extends Teapot {
 
     DcMotor arm1Motor = null;
     ImuDrive imuDrive;
@@ -69,7 +69,6 @@ public class AutonomousILTv1 extends Teapot {
         knockOffGoldThingy();
         Say("HOLY CRAP WE PULLED A QUANTUM SHIFT AND JUMPED THE LOOP");
         pause();
-        imuDrive.straight(-6);
         Say("BUSH DID 911");
         Say("have a nice day");
 
