@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class Teapot extends LinearOpMode {
-
+public abstract class Teapot extends LinearOpMode {
 
     public void waitForDriveDone(DcMotor m1, DcMotor m2) {
         while (opModeIsActive()) {
@@ -38,8 +37,5 @@ public class Teapot extends LinearOpMode {
         telemetry.update();
     }
 
-    @Override
-    public void runOpMode() throws InterruptedException {
 
-    }
 }

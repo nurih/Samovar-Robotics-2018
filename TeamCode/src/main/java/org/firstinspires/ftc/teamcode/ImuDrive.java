@@ -32,24 +32,11 @@ public class ImuDrive {
         imu = new IMU(hardwareMap, telemetry);
     }
 
-    public void waitForMotorsToReach() {
-        while (
-                leftMotor.isBusy() && rightMotor.isBusy()) {
-            // spinning, do nothing, stay in loop
-
+    public void waitUntilPositionReached() {
+        while (leftMotor.isBusy() && rightMotor.isBusy()) {
+            // spinning, do nothing, stay in loop but let other work happen
+            opMode.idle();
         }
-        return;
-//        while (
-//                (!
-//
-//                        (leftMotor.getCurrentPosition()>=leftMotor.getTargetPosition()-10)
-//                        && (leftMotor.getCurrentPosition()<= leftMotor.getTargetPosition()+10)
-//                        &&(leftMotor.getCurrentPosition()>=leftMotor.getTargetPosition()-10)
-//                        && (rightMotor.getCurrentPosition()<= rightMotor.getTargetPosition()+10)
-//                        &&(rightMotor.getCurrentPosition()>= rightMotor.getTargetPosition()-10)))
-//        {
-//            //WE WAITN
-//        }
     }
 
     private DcMotor initializeDriveMotor(double driveMotorPower, String motorName, DcMotorSimple.Direction direction) {

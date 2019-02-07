@@ -5,57 +5,29 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static org.firstinspires.ftc.teamcode.Autonomous2OpMode.DETACH_FROM_LANDER_TICKS;
 
-@Autonomous(name = "Autonomous ILT Depot")
-public class AutonomousILT2 extends Teapot {
+public abstract class AutonomousILT extends Teapot {
+    static final double AWAY_FROM_HOOK = 3;
 
     DcMotor arm1Motor = null;
     ImuDrive imuDrive;
     SamoVision samoVision;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
+    protected void initializeAndWaitForStart() {
         arm1Motor = initializeArmMotor(1);
         imuDrive = new ImuDrive(this);
 
         samoVision = new SamoVision(hardwareMap);
         Say("Hardware initialized");
         waitForStart();
+    }
 
-        // off the wall
-        lowerFromLatch();
-
-        double AWAY_FROM_HOOK = 3;
-        // away from hook to detach
-        imuDrive.straight(AWAY_FROM_HOOK);
-        pause();
-
-        // retract latch arm
-        pullArmBack();
-
-
-        // back forward so not bumping against lander leg
-        imuDrive.straight(-AWAY_FROM_HOOK);
-        pause();
-
-        // facing out of lander
-        imuDrive.turn(60);
-        Say("Turned out to field");
-        pause();
-
-        // into field to get closer to minerals
-        imuDrive.straight(-6);
-        Say("Drove away from lander");
-        pause();
-
-        // try out luck to get it the first time
-        samoVision.trySeeGoldThing();
-
+    protected void turnTowardsGoldMineral() {
         //loop where we turn, and check if we are seeing gold thingy\
         double startingAngle = imuDrive.getDegrees();
         Say("Starting angle", startingAngle);
         for (int attempt = 1; attempt <= 6; attempt++) {
             if (samoVision.trySeeGoldThing()) {
-                Say("It's right there!!! attempt");
+                Say("It's right there!!! attempt", attempt);
                 break;
             } else {
                 int targetAngle = (int) startingAngle + 12 * attempt;
@@ -64,18 +36,9 @@ public class AutonomousILT2 extends Teapot {
                 pause();
             }
         }
-
-        Say("Here we go?");
-        knockOffGoldThingy();
-        Say("HOLY CRAP WE PULLED A QUANTUM SHIFT AND JUMPED THE LOOP");
-        pause();
-        Say("BUSH DID 911");
-        Say("have a nice day");
-
-
     }
 
-    private void knockOffGoldThingy() {
+    protected void knockOffGoldThingy() {
         int attempts = 0;
         while (!this.isStopRequested()) {
             // vision - try to see object.
@@ -87,28 +50,23 @@ public class AutonomousILT2 extends Teapot {
                 }
 
                 imuDrive.straight(-10);
-                imuDrive.waitForMotorsToReach();
+                imuDrive.waitUntilPositionReached();
                 telemetry.addLine("Inched forward");
                 attempts++;
             } else {
-
-
                 if (attempts >= 5) {
-
                     break;
                 }
             }
             telemetry.update();
         }
-
-
     }
 
-    private void pause() {
+    protected void pause() {
         sleep(500);
     }
 
-    private void pullArmBack() {
+    protected void pullArmBack() {
         int currentPosition = arm1Motor.getCurrentPosition();
         int determinedPosition = currentPosition - (DETACH_FROM_LANDER_TICKS);
 
@@ -120,7 +78,7 @@ public class AutonomousILT2 extends Teapot {
 
     }
 
-    private void lowerFromLatch() {
+    protected void lowerFromLatch() {
         int currentPosition = arm1Motor.getCurrentPosition();
 
         int determinedPosition = currentPosition + DETACH_FROM_LANDER_TICKS;
@@ -136,7 +94,7 @@ public class AutonomousILT2 extends Teapot {
 
     }
 
-    private DcMotor initializeArmMotor(double power) {
+    protected DcMotor initializeArmMotor(double power) {
         DcMotor arm1Motor = hardwareMap.dcMotor.get(RobotPart.ARM_1_MOTOR);
         arm1Motor.setPower(0);
         arm1Motor.setDirection(DcMotor.Direction.REVERSE);
