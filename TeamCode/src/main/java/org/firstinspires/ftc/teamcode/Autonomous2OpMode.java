@@ -44,10 +44,10 @@ public class Autonomous2OpMode extends LinearOpMode {
     private void turn(int TurnAmount) {
         boolean turned = false;
 
-        double angleInDegrees = imu.getDegrees();
+        double angleInDegrees = imu.getTurningDegrees();
 
         while (angleInDegrees < TurnAmount) {
-            angleInDegrees = imu.getDegrees();
+            angleInDegrees = imu.getTurningDegrees();
             rightMotor.setPower(.4);
             leftMotor.setPower(-.4);
             telemetry.addLine("U NEVER LEFT THE MATRIX BROOO, THERE IS NO ESCAPE");

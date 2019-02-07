@@ -65,7 +65,7 @@ public class ImuDrive2 {
     }
 
     public double getDegrees() {
-        return imu.getDegrees();
+        return imu.getTurningDegrees();
     }
 
     public void straight(double distanceInches) {

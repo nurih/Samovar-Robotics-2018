@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static org.firstinspires.ftc.teamcode.Autonomous2OpMode.DETACH_FROM_LANDER_TICKS;
@@ -49,12 +48,12 @@ public abstract class AutonomousILT extends Teapot {
                     imuDrive.turn((int) (imuDrive.getDegrees() + angle));
                 }
 
-                imuDrive.straight(-10);
+                imuDrive.straight(-4);
                 imuDrive.waitUntilPositionReached();
                 telemetry.addLine("Inched forward");
                 attempts++;
             } else {
-                if (attempts >= 5) {
+                if (attempts > 8) {
                     break;
                 }
             }
@@ -90,6 +89,22 @@ public abstract class AutonomousILT extends Teapot {
         while (arm1Motor.isBusy() && !isStopRequested()) {
             telemetry.addData("Position", arm1Motor.getCurrentPosition());
             telemetry.update();
+        }
+
+    }
+
+    protected void driveToCrater() {
+        // capture current floor angles to calibrate if we are tilted based on
+        // this field floor
+        imuDrive.imu.calibrateTilt();
+
+        for (int attempt = 0; attempt < 6; attempt++) {
+            imuDrive.straight(-4);
+            imuDrive.waitUntilPositionReached();
+            if (imuDrive.imu.isTilted()) {
+                break;
+            }
+            Say("Going to crater ", attempt);
         }
 
     }

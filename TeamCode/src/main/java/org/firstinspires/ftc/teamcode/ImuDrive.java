@@ -19,7 +19,7 @@ public class ImuDrive {
     DcMotor leftMotor;
     DcMotor rightMotor;
 
-    IMU imu;
+    public IMU imu;
 
     public ImuDrive(LinearOpMode parentOpMode) {
 
@@ -73,7 +73,7 @@ public class ImuDrive {
     }
 
     public double getDegrees() {
-        return imu.getDegrees();
+        return imu.getTurningDegrees();
     }
 
     public void straight(double distanceInches) {

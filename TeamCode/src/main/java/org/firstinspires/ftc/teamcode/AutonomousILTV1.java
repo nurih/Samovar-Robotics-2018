@@ -40,11 +40,16 @@ public class AutonomousILTV1 extends AutonomousILT{
 
         Say("Here we go?");
         knockOffGoldThingy();
-        Say("HOLY CRAP WE PULLED A QUANTUM SHIFT AND JUMPED THE LOOP");
+        Say("WE PULLED A QUANTUM SHIFT AND JUMPED THE LOOP");
         pause();
-        imuDrive.straight(-6);
-        Say("have a nice day");
 
+        driveToCrater();
+
+        pause();
+        pause();
+        pause();
+        pause();
+        pause();
     }
 
 }

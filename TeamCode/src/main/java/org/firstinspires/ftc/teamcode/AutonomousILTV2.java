@@ -40,7 +40,7 @@ public class AutonomousILTV2 extends AutonomousILT{
 
         Say("Here we go?");
         knockOffGoldThingy();
-        Say("HOLY CRAP WE PULLED A QUANTUM SHIFT AND JUMPED THE LOOP");
+        Say("WE PULLED A QUANTUM SHIFT AND JUMPED THE LOOP");
         pause();
     }
 

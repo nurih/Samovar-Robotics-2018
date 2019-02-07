@@ -16,8 +16,11 @@ public class IMU {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     BNO055IMU imu;
+    private float floorAngle1;
+    private float floorAngle2;
+    private double TILT_LIMIT = 1.5;
 
-    public IMU(HardwareMap hardwareMap, Telemetry telemetry){
+    public IMU(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         imu = initializeIMU();
@@ -37,11 +40,38 @@ public class IMU {
         return imu;
     }
 
-    public double getDegrees(){
-        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+    public double getTurningDegrees() {
+        Orientation orientation = getOrientation();
         double angleInDegrees = AngleUnit.DEGREES.fromUnit(orientation.angleUnit, orientation.firstAngle);
         telemetry.addData("Heading (degrees)", toString(angleInDegrees));
         return angleInDegrees;
+    }
+
+    public void calibrateTilt() {
+        Orientation orientation = getOrientation();
+        floorAngle1 = AngleUnit.DEGREES.fromUnit(orientation.angleUnit, orientation.secondAngle);
+        floorAngle2 = AngleUnit.DEGREES.fromUnit(orientation.angleUnit, orientation.thirdAngle);
+
+        telemetry.addData("Tilt angle 1", toString(floorAngle1));
+        telemetry.addData("Tilt angle 2", toString(floorAngle2));
+    }
+
+    public boolean isTilted() {
+        Orientation orientation = getOrientation();
+        float angle1 = AngleUnit.DEGREES.fromUnit(orientation.angleUnit, orientation.secondAngle);
+        float angle2 = AngleUnit.DEGREES.fromUnit(orientation.angleUnit, orientation.thirdAngle);
+
+        float tilt1 = Math.abs(Math.abs(angle1) - Math.abs(floorAngle1));
+        float tilt2 = Math.abs(Math.abs(angle2) - Math.abs(floorAngle2));
+
+        telemetry.addData("Tilt angle 1", toString(floorAngle1));
+        telemetry.addData("Tilt angle 2", toString(floorAngle2));
+
+        return tilt1 > TILT_LIMIT || tilt2 > TILT_LIMIT;
+    }
+
+    private Orientation getOrientation() {
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
     public String toString(double degrees) {
